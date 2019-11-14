@@ -253,7 +253,7 @@ public abstract class GenericXMLSignature {
 			if ((certs == null) || (certs.size() == 0)) {
 				throw new VeronicaException("La lista de certificados se encuentra vacía.");
 			}
-			X509Certificate certificate = certs.get(0);
+			X509Certificate certificate = certs.get(1);
 			return certificate;
 		} catch (CertStoreException ex) {
 			throw new VeronicaException(ex);
