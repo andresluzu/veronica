@@ -32,6 +32,9 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 /**
  * <p>
  * Clase base que deberían extender los diferentes ejemplos para realizar firmas
@@ -44,6 +47,9 @@ import java.util.List;
 @Setter
 @Getter
 public abstract class GenericXMLSignature {
+
+	private static final String ID_CE_CERTIFICATE_POLICIES = "2.5.29.32";
+
 	/**
 	 * <p>
 	 * Almacén PKCS12 con el que se desea realizar la firma
@@ -240,23 +246,47 @@ public abstract class GenericXMLSignature {
 
 	/**
 	 * <p>
-	 * Recupera el primero de los certificados del almacén.
+	 * Recupera el primero de los certificados del almacén que contenga políticas
+	 * <b>id-ce-certificatePolicies</b> con ID <b>2.5.29.32</b>.
 	 * </p>
 	 * 
 	 * @param storeManager Interfaz de acceso al almacén
 	 * @return Primer certificado disponible en el almacén
+	 * @throws VeronicaException cuando el almacen está vacío
+	 * o no se encuentran certificados con políticas.
 	 */
 	private X509Certificate getFirstCertificate(final IPKStoreManager storeManager) throws VeronicaException {
 		try {
-			List<X509Certificate> certs = null;
-			certs = storeManager.getSignCertificates();
-			if ((certs == null) || (certs.size() == 0)) {
+			List<X509Certificate> certs = storeManager.getSignCertificates();
+			if (isNull(certs) || certs.isEmpty()) {
 				throw new VeronicaException("La lista de certificados se encuentra vacía.");
 			}
-			X509Certificate certificate = certs.get(1);
+			X509Certificate certificate = certs.stream()
+					.filter(this::hasCertificatePolicies)
+					.findFirst().orElseThrow(() -> new VeronicaException("No se encontró ningún certificado con políticas"));
 			return certificate;
 		} catch (CertStoreException ex) {
 			throw new VeronicaException(ex);
 		}
+	}
+
+	/**
+	 * <p>
+	 * Verifica la existencia de políticas en el certificado utilizando el campo
+	 * <b>id-ce-certificatePolicies</b> con ID <b>2.5.29.32</b>.
+	 * </p>
+	 *
+	 * @param certificate certificado a examinar
+	 * @return true si encuentra políticas, false si no encuentra políticas o el certificado es nulo
+	 */
+	private boolean hasCertificatePolicies(X509Certificate certificate) {
+		if (nonNull(certificate)) {
+			byte[] certificatePolicies = certificate.getExtensionValue(ID_CE_CERTIFICATE_POLICIES);
+			if (nonNull(certificatePolicies) && certificatePolicies.length > 0) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
