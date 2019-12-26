@@ -15,7 +15,7 @@ public interface GenericCRUDService<DOMAIN, DTO> {
 	 * @return
 	 */
 	public DOMAIN mapTo(DTO dtoObject);
-	
+
 	/**
 	 * Allows to serialize a domain object
 	 * @param domainObject
@@ -29,5 +29,12 @@ public interface GenericCRUDService<DOMAIN, DTO> {
 	 * @return
 	 */
 	public abstract Optional<DOMAIN> findExisting(DTO domainObject);
+
+	/**
+	 * Allows to deleting an existing object identified by a RUC number
+	 * @param ownerRUC
+	 * @return
+	 */
+	public abstract void deleteExistingByRUC(String ownerRUC);
 
 }

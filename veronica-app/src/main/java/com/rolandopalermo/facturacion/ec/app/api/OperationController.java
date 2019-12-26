@@ -25,13 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -76,6 +70,16 @@ public class OperationController {
         digitalCertService.saveOrUpdate(certificadoDigital);
         response.setSuccess(true);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "Borra un certificado digital asociado a número de RUC")
+    @DeleteMapping(value = "borrar-certificado-digital", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteDigitalCert(
+            @Valid @ApiParam(value = API_DOC_ANEXO_1, required = true) @RequestBody String rucPropietario) {
+        VeronicaResponseDTO<Object> response = new VeronicaResponseDTO<>();
+        digitalCertService.deleteExistingByRUC(rucPropietario);
+        response.setSuccess(true);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Crea un nuevo tipo de impuesto")

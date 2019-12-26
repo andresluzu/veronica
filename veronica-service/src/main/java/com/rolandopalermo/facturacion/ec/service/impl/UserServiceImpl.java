@@ -58,6 +58,11 @@ public class UserServiceImpl extends GenericCRUDServiceImpl<User, UsuarioDTO> {
     }
 
     @Override
+    public void deleteExistingByRUC(String ownerRUC) {
+
+    }
+
+    @Override
     public UsuarioDTO build(User domainObject) {
         return null;
     }

@@ -13,8 +13,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import static com.rolandopalermo.facturacion.ec.common.util.Constants.URI_API_V1;
 import static com.rolandopalermo.facturacion.ec.common.util.Constants.URI_OPERATIONS;
 
-@Configuration
-@EnableResourceServer
+//@Configuration
+//@EnableResourceServer
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Autowired

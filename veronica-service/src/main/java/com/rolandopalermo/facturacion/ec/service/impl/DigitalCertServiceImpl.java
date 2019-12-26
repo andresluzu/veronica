@@ -1,5 +1,6 @@
 package com.rolandopalermo.facturacion.ec.service.impl;
 
+import com.rolandopalermo.facturacion.ec.common.exception.VeronicaException;
 import com.rolandopalermo.facturacion.ec.dto.CertificadoDigitalDTO;
 import com.rolandopalermo.facturacion.ec.persistence.entity.DigitalCert;
 import com.rolandopalermo.facturacion.ec.persistence.repository.DigitalCertRepository;
@@ -31,9 +32,26 @@ public class DigitalCertServiceImpl extends GenericCRUDServiceImpl<DigitalCert, 
         return domainRepository.findByOwnerAndActive(domainObject.getRucPropietario(), true);
     }
 
+    public Optional<DigitalCert> findExistingByRUC(String RUC) {
+        return domainRepository.findByOwnerAndActive(RUC, true);
+    }
+
+    @Override
+    public void deleteExistingByRUC(String ownerRUC){
+        Optional<DigitalCert> digitalCert = findExistingByRUC(ownerRUC);
+        try {
+            domainRepository.delete(digitalCert.get());
+        }
+        catch (Exception ex){
+            throw new VeronicaException(String.format("No existe certificado con RUC: %s", ownerRUC));
+        }
+    }
+
     @Override
     public CertificadoDigitalDTO build(DigitalCert domainObject) {
         return null;
     }
+
+
 
 }

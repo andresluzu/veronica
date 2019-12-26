@@ -29,6 +29,11 @@ public class ReceiptTypeServiceImpl extends GenericCRUDServiceImpl<ReceiptType, 
 	}
 
 	@Override
+	public void deleteExistingByRUC(String ownerRUC) {
+
+	}
+
+	@Override
 	public TipoDocumentoDTO build(ReceiptType domainObject) {
 		return null;
 	}
