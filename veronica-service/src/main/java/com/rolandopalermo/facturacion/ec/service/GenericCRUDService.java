@@ -31,7 +31,7 @@ public interface GenericCRUDService<DOMAIN, DTO> {
 	public abstract Optional<DOMAIN> findExisting(DTO domainObject);
 
 	/**
-	 * Allows to delete an existing object identified by a RUC number
+	 * Allows to delete an existing object
 	 * @param domainObject
 	 * @return
 	 */
