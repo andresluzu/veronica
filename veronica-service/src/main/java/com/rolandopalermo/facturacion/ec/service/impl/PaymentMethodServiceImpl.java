@@ -28,11 +28,6 @@ public class PaymentMethodServiceImpl extends GenericCRUDServiceImpl<PaymentMeth
     }
 
     @Override
-    public void deleteExistingByRUC(String ownerRUC) {
-
-    }
-
-    @Override
     public MetodoPagoDTO build(PaymentMethod domainObject) {
         return null;
     }

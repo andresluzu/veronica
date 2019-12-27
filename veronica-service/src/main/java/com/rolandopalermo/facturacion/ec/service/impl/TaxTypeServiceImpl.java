@@ -29,11 +29,6 @@ public class TaxTypeServiceImpl extends GenericCRUDServiceImpl<TaxType, TipoImpu
 	}
 
 	@Override
-	public void deleteExistingByRUC(String ownerRUC) {
-
-	}
-
-	@Override
 	public TipoImpuestoDTO build(TaxType domainObject) {
 		return null;
 	}

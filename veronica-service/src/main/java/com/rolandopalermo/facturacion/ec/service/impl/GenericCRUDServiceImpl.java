@@ -45,4 +45,9 @@ public abstract class GenericCRUDServiceImpl<DOMAIN, DTO> implements GenericCRUD
     @Override
     public abstract Optional<DOMAIN> findExisting(DTO domainObject);
 
+    @Override
+    public void deleteExisting(DTO domainObject) {
+
+    }
+
 }

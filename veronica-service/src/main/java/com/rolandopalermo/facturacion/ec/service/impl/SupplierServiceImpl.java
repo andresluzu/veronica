@@ -32,11 +32,6 @@ public class SupplierServiceImpl extends GenericCRUDServiceImpl<Supplier, Empres
 	}
 
 	@Override
-	public void deleteExistingByRUC(String ownerRUC) {
-
-	}
-
-	@Override
 	public EmpresaDTO build(Supplier domainObject) {
 		EmpresaDTO dto = new EmpresaDTO();
 		dto.setLogo(domainObject.getLogo());

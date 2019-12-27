@@ -73,11 +73,13 @@ public class OperationController {
     }
 
     @ApiOperation(value = "Borra un certificado digital asociado a número de RUC")
-    @DeleteMapping(value = "borrar-certificado-digital", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "borrar-certificado-digital/{ruc}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteDigitalCert(
-            @Valid @ApiParam(value = API_DOC_ANEXO_1, required = true) @RequestBody String rucPropietario) {
+            @Valid @ApiParam(value = "RUC de usuario", required = true) @PathVariable("ruc") String ruc) {
         VeronicaResponseDTO<Object> response = new VeronicaResponseDTO<>();
-        digitalCertService.deleteExistingByRUC(rucPropietario);
+        CertificadoDigitalDTO certificadoDigital = new CertificadoDigitalDTO();
+        certificadoDigital.setRucPropietario(ruc);
+        digitalCertService.deleteExisting(certificadoDigital);
         response.setSuccess(true);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
