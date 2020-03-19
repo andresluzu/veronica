@@ -111,6 +111,29 @@
 				<env>docker</env>
 			</properties>
 		</profile>
+        <!-- OS resources -->
+        <profile>
+            <id>windows-profile</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <docker.host>tcp://localhost:2375</docker.host>
+            </properties>
+        </profile>
+        <profile>
+            <id>none-windows-profile</id>
+            <activation>
+                <os>
+                    <family>!windows</family>
+                </os>
+            </activation>
+            <properties>
+                <docker.host>unix:///var/run/docker.sock</docker.host>
+            </properties>
+        </profile>
 	</profiles>
 	<build>
 		<filters>
@@ -137,7 +160,7 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>${version.docker.maven.plugin}</version>
 				<configuration>
-					<dockerHost>unix:///var/run/docker.sock</dockerHost>
+					<dockerHost>${docker.host}</dockerHost>
 					<verbose>true</verbose>
 					<images>
 						<image>

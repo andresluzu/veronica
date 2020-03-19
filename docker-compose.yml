@@ -1,0 +1,22 @@
+version: '3'
+services:
+  veronica-db:
+    container_name: veronica-db
+    image: rolandopalermo/veronica-db
+    environment:
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=veronica
+    command: ["postgres", "-c", "encrypt.key=8qxBjzCdQkwdpu"]
+    volumes:
+      - ./veronica-app/src/main/postgres/veronica.sql:/docker-entrypoint-initdb.d/veronica.sql
+  veronica:
+    container_name: veronica
+    image: rolandopalermo/veronica
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_DATASOURCE_USERNAME=postgres
+    links:
+      - veronica-db
