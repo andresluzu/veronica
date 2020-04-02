@@ -837,17 +837,53 @@ create table public.oauth_approvals (
 );
 
 --
+-- Name: document_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.document_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER TABLE public.document_seq OWNER TO postgres;
+
+--
+-- Name: document; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.document (
+    document_id integer DEFAULT nextval('public.document_seq'::regclass) PRIMARY KEY,
+    phase varchar(15) NOT NULL,
+    type varchar(15) NOT NULL,
+    tin varchar(15) NOT NULL,
+    number varchar(20) NOT NULL,
+    access_key varchar(50),
+    state varchar(15) NOT NULL,
+    retries smallint NOT NULL,
+    date_time timestamp without time zone NOT NULL,
+    message_id varchar(50) NOT NULL,
+    published_message_id varchar(50),
+    topic varchar(50) NOT NULL,
+    content text NOT NULL,
+    error_message text
+);
+
+ALTER TABLE public.document OWNER TO postgres;
+
+--
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO PUBLIC.internal_status (internal_status_id, description) VALUES 
-(1, 'CREATED'), 
-(2, 'POSTED'), 
-(3, 'APPLIED'), 
-(4, 'REJECTED'), 
+INSERT INTO PUBLIC.internal_status (internal_status_id, description) VALUES
+(1, 'CREATED'),
+(2, 'POSTED'),
+(3, 'APPLIED'),
+(4, 'REJECTED'),
 (5, 'INVALID');
 
-INSERT INTO PUBLIC.payment_method (code, description) VALUES 
+INSERT INTO PUBLIC.payment_method (code, description) VALUES
 ('01', 'SIN UTILIZACION DEL SISTEMA FINANCIERO'),
 ('15', 'COMPENSACIÓN DE DEUDAS'),
 ('16', 'TARJETA DE DÉBITO'),
@@ -857,7 +893,7 @@ INSERT INTO PUBLIC.payment_method (code, description) VALUES
 ('20', 'OTROS CON UTILIZACION DEL SISTEMA FINANCIERO'),
 ('21', 'ENDOSO DE TÍTULOS');
 
-INSERT INTO PUBLIC.receipt_type (code, description) VALUES 
+INSERT INTO PUBLIC.receipt_type (code, description) VALUES
 ('01', 'FACTURA'),
 ('02', 'NOTA VENTA'),
 ('03', 'LIQ. DE COMPRA'),
@@ -871,7 +907,7 @@ INSERT INTO PUBLIC.receipt_type (code, description) VALUES
 ('20', 'DOCS SERV ADMIN'),
 ('41', 'COMP. REEMBOLSO');
 
-INSERT INTO PUBLIC.tax_type (code, description) VALUES 
+INSERT INTO PUBLIC.tax_type (code, description) VALUES
 ('1', 'RENTA'),
 ('2', 'IVA'),
 ('3', 'ICE'),

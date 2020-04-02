@@ -1,0 +1,76 @@
+{
+  "id": "comprobante",
+  "version": "1.0.0",
+  "infoTributaria": {
+    "ambiente": "1",
+    "tipoEmision": "1",
+    "razonSocial": "IASafike CIA LTDA.",
+    "nombreComercial": "Safike",
+    "ruc": "2390007488001",
+    "codDoc": "01",
+    "estab": "001",
+    "ptoEmi": "002",
+    "secuencial": "000000614",
+    "dirMatriz": "Calle Guayaquil 203"
+  },
+  "infoFactura": {
+    "fechaEmision": "02/04/2020",
+    "dirEstablecimiento": "Otra en Guayaquil",
+    "tipoIdentificacionComprador": "04",
+    "razonSocialComprador": "Tecnología Agrícola Agro Fruto Afu S.A.",
+    "identificacionComprador": "0993019666001",
+    "direccionComprador": "Direc del comprador",
+    "totalSinImpuestos": 100,
+    "totalDescuento": 0,
+    "totalImpuesto": [
+      {
+        "codigo": "2",
+        "codigoPorcentaje": "2",
+        "tarifa": 12,
+        "baseImponible": 100,
+        "valor": 12
+      }
+    ],
+    "propina": 0,
+    "importeTotal": 112,
+    "moneda": "DOLAR",
+    "pagos": [
+      {
+        "formaPago": "01",
+        "total": 112,
+        "plazo": "0",
+        "unidadTiempo": "dias"
+      }
+    ]
+  },
+  "detalle": [
+    {
+      "cantidad": 1,
+      "descripcion": "Distribución de TI",
+      "descuento": 0,
+      "detAdicional": [
+        {
+          "nombre": "Detalle",
+          "valor": "Cuenta google apps miniwillys.com"
+        }
+      ],
+      "impuesto": [
+        {
+          "codigo": "2",
+          "codigoPorcentaje": "2",
+          "tarifa": 12,
+          "baseImponible": 100,
+          "valor": 12
+        }
+      ],
+      "precioTotalSinImpuesto": 100,
+      "precioUnitario": 100
+    }
+  ],
+  "campoAdicional": [
+    {
+      "nombre": "sistema",
+      "value": "mikareno"
+    }
+  ]
+}
