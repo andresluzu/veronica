@@ -30,10 +30,10 @@ public class MessagePublisher {
     public void finalize() {
         if (publisher != null) {
             // When finished with the publisher, shutdown to free up resources.
-            publisher.shutdown();
             try {
+                publisher.shutdown();
                 publisher.awaitTermination(1, TimeUnit.MINUTES);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 LOGGER.error("Cannot shutdown Pub/Sub publisher", e);
             }
         }

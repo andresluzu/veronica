@@ -15,7 +15,7 @@ steps:
         mvn install:install-file -Dfile=MITyCLibXADES-1.0.4.jar -DgroupId=es.mityc.javasign -DartifactId=xades -Dversion=1.0.4 -Dpackaging=jar
         mvn install:install-file -Dfile=xmlsec-1.4.2-ADSI-1.0.jar -DgroupId=org.apache.xmlsec-adsi -DartifactId=xmlsec-adsi -Dversion=1.4.2 -Dpackaging=jar
         cd ../
-        mvn package install -P docker
+        mvn install -P docker
   - name: gcr.io/cloud-builders/docker
     dir: 'veronica-app'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/veronica', '.']
