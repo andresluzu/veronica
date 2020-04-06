@@ -12,5 +12,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     Optional<Document> findByAccessKey(String accessKey);
 
+    Optional<Document> findByMessageId(String messageId);
+
     Collection<Document> findByPhaseInAndStateInAndRetriesLessThanEqual(String[] phases, String[] states, int maxRetries);
 }

@@ -1,12 +1,9 @@
 package com.rolandopalermo.facturacion.ec.service.pubsub;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.pubsub.v1.PubsubMessage;
 import com.rolandopalermo.facturacion.ec.service.TestBaseSpring;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -27,7 +24,6 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = MessagePublisher.class)
 public class MessagePublisherTest extends TestBaseSpring {
 
-    private static final Logger LOGGER = LogManager.getLogger(MessagePublisherTest.class);
     private static final String MESSAGE_ID = "21231232";
 
     @Autowired
@@ -44,7 +40,7 @@ public class MessagePublisherTest extends TestBaseSpring {
     }
 
     @Test
-    public void publishOne() throws JsonProcessingException, ExecutionException, InterruptedException {
+    public void publishOne() throws ExecutionException, InterruptedException {
         assertNotNull(messagePublisher);
         PubsubMessage message = new MessageBuilder().build();
         assertNotNull(message);
@@ -53,7 +49,7 @@ public class MessagePublisherTest extends TestBaseSpring {
     }
 
     @Test
-    public void publishTen() throws JsonProcessingException, ExecutionException, InterruptedException {
+    public void publishTen() throws ExecutionException, InterruptedException {
         int threads = 10;
         ExecutorService service = Executors.newFixedThreadPool(threads);
         Collection<Future<?>> futures = new ArrayList<>(threads);

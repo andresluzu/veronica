@@ -15,6 +15,13 @@ public class MessageBuilder {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    static final String TIN_ATTR = "tin";
+    static final String TYPE_ATTR = "type";
+    static final String NUMBER_ATTR = "number";
+    static final String PHASE_ATTR = "phase";
+    static final String STATE_ATTR = "state";
+    static final String CONTENT_TYPE_ATTR = "contentType";
+
     static final String DEFAULT_TIN = "9999999999999";
     static final String DEFAULT_NUMBER = "000-000-000000000";
     static final String EMPTY_DATA = "EMPTY";
@@ -29,24 +36,30 @@ public class MessageBuilder {
     private String contentType;
 
     public MessageBuilder() {
-        this.phase = ProcessingPhase.UNDEFINED;
-        this.type = DocumentType.FACTURA;
         this.tin = DEFAULT_TIN;
+        this.type = DocumentType.FACTURA;
         this.number = DEFAULT_NUMBER;
+        this.phase = ProcessingPhase.UNDEFINED;
         this.state = ProcessingState.ERROR;
-        this.content = EMPTY_DATA;
         this.contentType = DEFAULT_CONTENT_TYPE;
+        this.content = EMPTY_DATA;
     }
 
     private ProcessedDocument create() {
         return new ProcessedDocument(phase.name(), type.name(), tin, number, state.name(), content, contentType);
     }
 
-    public PubsubMessage build() throws JsonProcessingException {
+    public PubsubMessage build() {
         ProcessedDocument document = create();
-        String content = MAPPER.writeValueAsString(document);
-        ByteString data = ByteString.copyFromUtf8(content);
-        return PubsubMessage.newBuilder().setData(data).build();
+        ByteString data = ByteString.copyFromUtf8(document.getContent());
+        return PubsubMessage.newBuilder()
+                .putAttributes(TIN_ATTR, document.getTin())
+                .putAttributes(TYPE_ATTR, document.getType())
+                .putAttributes(NUMBER_ATTR, document.getNumber())
+                .putAttributes(PHASE_ATTR, document.getPhase())
+                .putAttributes(STATE_ATTR, document.getState())
+                .putAttributes(CONTENT_TYPE_ATTR, document.getContentType())
+                .setData(data).build();
     }
 
     public MessageBuilder withComprobanteId(ComprobanteIdDTO dto) {

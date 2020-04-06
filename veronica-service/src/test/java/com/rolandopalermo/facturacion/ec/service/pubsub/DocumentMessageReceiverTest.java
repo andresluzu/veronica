@@ -20,6 +20,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.Date;
+import java.util.Optional;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -72,6 +73,7 @@ public class DocumentMessageReceiverTest extends TestBaseSpring {
         when(domainConfiguration.getNumberAttName()).thenReturn(NUMBER_ATT_NAME);
 
         when(serviceFactory.getService(any(String.class))).thenReturn(sriService);
+        when(documentRepository.findByMessageId(MESSAGE_ID)).thenReturn(Optional.ofNullable(null));
         String invoiceJson = FileUtils.readFileToString(invoiceResource.getFile(), "UTF-8");
         ByteString invoiceData = ByteString.copyFromUtf8(invoiceJson);
 
@@ -104,6 +106,16 @@ public class DocumentMessageReceiverTest extends TestBaseSpring {
         verify(ackReplyConsumer).ack();
         verify(ackReplyConsumer, times(0)).nack();
         verify(taskScheduler).schedule(any(CreationTask.class), any(Date.class));
+    }
+
+    @Test
+    public void receiveDuplicatedMessage() {
+        when(documentRepository.findByMessageId(MESSAGE_ID)).thenReturn(Optional.ofNullable(document));
+        messageReceiver.receiveMessage(pubsubMessage, ackReplyConsumer);
+        verify(documentRepository, times(1)).findByMessageId(MESSAGE_ID);
+        verifyNoMoreInteractions(documentRepository);
+        verifyNoMoreInteractions(taskScheduler);
+        verify(ackReplyConsumer).ack();
     }
 
     @Test

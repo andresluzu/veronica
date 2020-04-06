@@ -35,6 +35,10 @@ public class DocumentMessageReceiver implements MessageReceiver {
     public void receiveMessage(PubsubMessage pubsubMessage, AckReplyConsumer ackReplyConsumer) {
         LOGGER.info("Receiving Pub/Sub message {}", pubsubMessage.getMessageId());
         try {
+            if (documentRepository.findByMessageId(pubsubMessage.getMessageId()).isPresent()) {
+                LOGGER.info("Skipping message {} it is already processed", pubsubMessage.getMessageId());
+                return;
+            }
             Document document = createFrom(pubsubMessage);
             ComprobanteDTO dto = DocumentMapper.mapComprobante(document.getType(), document.getContent());
             GenericSRIServiceImpl sriService = serviceFactory.getService(document.getType());

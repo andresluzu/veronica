@@ -1,6 +1,5 @@
 package com.rolandopalermo.facturacion.ec.service.pubsub;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.pubsub.v1.PubsubMessage;
 import com.rolandopalermo.facturacion.ec.common.util.DocumentType;
 import com.rolandopalermo.facturacion.ec.dto.ComprobanteIdDTO;
@@ -66,48 +65,23 @@ public abstract class AbstractTask implements Runnable {
     }
 
     protected PubsubMessage createMessage(Object obj) {
-        try {
-            return createBuilder().withContent(obj.toString()).build();
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Cannot parse {}", obj.getClass().getSimpleName(), e);
-            throw new RuntimeException(e);
-        }
+        return createBuilder().withContent(obj.toString()).build();
     }
 
     protected PubsubMessage createMessage(Exception exception) {
-        try {
-            return createBuilder().withException(exception).build();
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Cannot parse Exception", e);
-            throw new RuntimeException(e);
-        }
+        return createBuilder().withException(exception).build();
     }
 
     protected PubsubMessage createMessage(ComprobanteIdDTO dto) {
-        try {
-            return createBuilder().withComprobanteId(dto).build();
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Cannot parse ComprobanteIdDTO", e);
-            throw new RuntimeException(e);
-        }
+        return createBuilder().withComprobanteId(dto).build();
     }
 
     protected PubsubMessage createMessage(RespuestaSolicitudDTO dto) {
-        try {
-            return createBuilder().withRespuestaSolicitud(dto).build();
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Cannot parse RespuestaSolicitudDTO", e);
-            throw new RuntimeException(e);
-        }
+        return createBuilder().withRespuestaSolicitud(dto).build();
     }
 
     protected PubsubMessage createMessage(RespuestaComprobanteDTO dto) {
-        try {
-            return createBuilder().withRespuestaComprobante(dto).build();
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Cannot parse RespuestaComprobanteDTO", e);
-            throw new RuntimeException(e);
-        }
+        return createBuilder().withRespuestaComprobante(dto).build();
     }
 
     private MessageBuilder createBuilder() {
