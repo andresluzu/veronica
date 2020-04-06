@@ -3,7 +3,6 @@ package com.rolandopalermo.facturacion.ec.service.pubsub;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rolandopalermo.facturacion.ec.common.util.Constants;
-import com.rolandopalermo.facturacion.ec.dto.v1_0.ComprobanteDTO;
 import com.rolandopalermo.facturacion.ec.dto.v1_0.sri.RespuestaSolicitudDTO;
 import com.rolandopalermo.facturacion.ec.persistence.entity.Document;
 import com.rolandopalermo.facturacion.ec.persistence.repository.DocumentRepository;
@@ -16,8 +15,6 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
 
 public class ValidationTask extends AbstractTask {
 
@@ -39,7 +36,7 @@ public class ValidationTask extends AbstractTask {
             LOGGER.error("Cannot validate SRI document", ex);
             document.setErrorMessage(ex.getMessage());
             document.setState(ProcessingState.ERROR.name());
-            publishMessage(ex);
+            publish(() -> createMessage(ex));
         }
 
         if (Objects.nonNull(result)) {
@@ -60,11 +57,12 @@ public class ValidationTask extends AbstractTask {
                     document.setState(ProcessingState.ERROR.name());
                     document.setErrorMessage(e.getMessage());
                 }
-                publishMessage(result);
+                RespuestaSolicitudDTO finalResult = result;
+                publish(() -> createMessage(finalResult));
             }
         } else {
             document.setState(ProcessingState.ERROR.name());
-            publishMessage("Invalid RespuestaSolicitudDTO");
+            publish(() -> createMessage("Invalid RespuestaSolicitudDTO"));
         }
         document.setDateTime(new Date());
         repository.save(document);

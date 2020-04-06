@@ -32,7 +32,7 @@ public class CreationTask extends AbstractTask {
             LOGGER.error("Cannot create SRI document", ex);
             document.setErrorMessage(ex.getMessage());
             document.setState(ProcessingState.ERROR.name());
-            publishMessage(ex);
+            publish(() -> createMessage(ex));
         }
 
         if (Objects.nonNull(result)) {
@@ -41,7 +41,7 @@ public class CreationTask extends AbstractTask {
             document.setPhase(ProcessingPhase.VALIDATION.name());
             taskScheduler.execute(new ValidationTask(sriService, repository, taskScheduler, document, publisher));
         } else {
-            publishMessage("Invalid ComprobanteIdDTO");
+            publish(() -> createMessage("Invalid ComprobanteIdDTO"));
             document.setState(ProcessingState.ERROR.name());
         }
         document.setDateTime(new Date());

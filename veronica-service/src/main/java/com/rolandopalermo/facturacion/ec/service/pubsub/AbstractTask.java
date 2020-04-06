@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
@@ -49,13 +50,11 @@ public abstract class AbstractTask implements Runnable {
         this.publisher = requireNonNull(publisher, "publisher cannot be null");
     }
 
-    protected <T> void publishMessage(T content) {
+    public void publish(Supplier<PubsubMessage> messageSupplier) {
+        PubsubMessage message = messageSupplier.get();
         try {
-            String messageId = publisher.publish(createMessage(content));
+            String messageId = publisher.publish(message);
             document.setPublishedMessageId(messageId);
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Cannot create Pub/Sub message", e);
-            throw new IllegalStateException(e);
         } catch (InterruptedException e) {
             LOGGER.error("Pub/Sub publish was interrupted", e);
             throw new IllegalStateException(e);
@@ -63,28 +62,52 @@ public abstract class AbstractTask implements Runnable {
             LOGGER.error("Cannot send Pub/Sub message", e);
             throw new IllegalStateException(e);
         }
-
         repository.save(document);
     }
 
-    protected PubsubMessage createMessage(Object obj) throws JsonProcessingException {
-        return createBuilder().withContent(obj.toString()).build();
+    protected PubsubMessage createMessage(Object obj) {
+        try {
+            return createBuilder().withContent(obj.toString()).build();
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Cannot parse {}", obj.getClass().getSimpleName(), e);
+            throw new RuntimeException(e);
+        }
     }
 
-    protected PubsubMessage createMessage(Exception exception) throws JsonProcessingException {
-        return createBuilder().withException(exception).build();
+    protected PubsubMessage createMessage(Exception exception) {
+        try {
+            return createBuilder().withException(exception).build();
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Cannot parse Exception", e);
+            throw new RuntimeException(e);
+        }
     }
 
-    protected PubsubMessage createMessage(ComprobanteIdDTO dto) throws JsonProcessingException {
-        return createBuilder().withComprobanteId(dto).build();
+    protected PubsubMessage createMessage(ComprobanteIdDTO dto) {
+        try {
+            return createBuilder().withComprobanteId(dto).build();
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Cannot parse ComprobanteIdDTO", e);
+            throw new RuntimeException(e);
+        }
     }
 
-    protected PubsubMessage createMessage(RespuestaSolicitudDTO dto) throws JsonProcessingException {
-        return createBuilder().withRespuestaSolicitud(dto).build();
+    protected PubsubMessage createMessage(RespuestaSolicitudDTO dto) {
+        try {
+            return createBuilder().withRespuestaSolicitud(dto).build();
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Cannot parse RespuestaSolicitudDTO", e);
+            throw new RuntimeException(e);
+        }
     }
 
-    protected PubsubMessage createMessage(RespuestaComprobanteDTO dto) throws JsonProcessingException {
-        return createBuilder().withRespuestaComprobante(dto).build();
+    protected PubsubMessage createMessage(RespuestaComprobanteDTO dto) {
+        try {
+            return createBuilder().withRespuestaComprobante(dto).build();
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Cannot parse RespuestaComprobanteDTO", e);
+            throw new RuntimeException(e);
+        }
     }
 
     private MessageBuilder createBuilder() {

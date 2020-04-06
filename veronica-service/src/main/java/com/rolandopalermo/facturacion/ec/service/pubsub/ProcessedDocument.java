@@ -10,5 +10,6 @@ public class ProcessedDocument {
     private final String number;
     private final String state;
     private final String content;
+    private final String contentType;
 
 }

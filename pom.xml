@@ -18,7 +18,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<filter.src>${basedir}</filter.src>
 		<java.version>1.8</java.version>
-		<skipTests>true</skipTests>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<maven.compiler.source>${java.version}</maven.compiler.source>

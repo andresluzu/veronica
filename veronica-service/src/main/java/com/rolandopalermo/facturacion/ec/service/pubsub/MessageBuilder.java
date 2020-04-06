@@ -14,9 +14,11 @@ import java.util.Optional;
 public class MessageBuilder {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+
     static final String DEFAULT_TIN = "9999999999999";
     static final String DEFAULT_NUMBER = "000-000-000000000";
     static final String EMPTY_DATA = "EMPTY";
+    static final String DEFAULT_CONTENT_TYPE = String.class.getSimpleName();
 
     private ProcessingPhase phase;
     private DocumentType type;
@@ -24,6 +26,7 @@ public class MessageBuilder {
     private String number;
     private ProcessingState state;
     private String content;
+    private String contentType;
 
     public MessageBuilder() {
         this.phase = ProcessingPhase.UNDEFINED;
@@ -32,10 +35,11 @@ public class MessageBuilder {
         this.number = DEFAULT_NUMBER;
         this.state = ProcessingState.ERROR;
         this.content = EMPTY_DATA;
+        this.contentType = DEFAULT_CONTENT_TYPE;
     }
 
     private ProcessedDocument create() {
-        return new ProcessedDocument(phase.name(), type.name(), tin, number, state.name(), content);
+        return new ProcessedDocument(phase.name(), type.name(), tin, number, state.name(), content, contentType);
     }
 
     public PubsubMessage build() throws JsonProcessingException {
@@ -48,6 +52,7 @@ public class MessageBuilder {
     public MessageBuilder withComprobanteId(ComprobanteIdDTO dto) {
         try {
             this.content = MAPPER.writeValueAsString(dto);
+            this.contentType = dto.getClass().getSimpleName();
         } catch (JsonProcessingException e) {
             this.state = ProcessingState.ERROR;
             this.content = e.getMessage();
@@ -58,6 +63,7 @@ public class MessageBuilder {
     public MessageBuilder withRespuestaSolicitud(RespuestaSolicitudDTO dto) {
         try {
             this.content = MAPPER.writeValueAsString(dto);
+            this.contentType = dto.getClass().getSimpleName();
         } catch (JsonProcessingException e) {
             this.state = ProcessingState.ERROR;
             this.content = e.getMessage();
@@ -68,6 +74,7 @@ public class MessageBuilder {
     public MessageBuilder withRespuestaComprobante(RespuestaComprobanteDTO dto) {
         try {
             this.content = MAPPER.writeValueAsString(dto);
+            this.contentType = dto.getClass().getSimpleName();
         } catch (JsonProcessingException e) {
             this.state = ProcessingState.ERROR;
             this.content = e.getMessage();

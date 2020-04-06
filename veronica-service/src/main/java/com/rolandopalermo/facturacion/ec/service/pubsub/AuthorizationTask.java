@@ -38,7 +38,7 @@ public class AuthorizationTask extends AbstractTask {
             LOGGER.error("Cannot authorize SRI document", ex);
             document.setErrorMessage(ex.getMessage());
             document.setState(ProcessingState.ERROR.name());
-            publishMessage(ex);
+            publish(() -> createMessage(ex));
         }
 
         if (Objects.nonNull(result)) {
@@ -59,10 +59,11 @@ public class AuthorizationTask extends AbstractTask {
                     document.setErrorMessage(e.getMessage());
                 }
             }
-            publishMessage(result);
+            RespuestaComprobanteDTO finalResult = result;
+            publish(() -> createMessage(finalResult));
         } else {
             document.setState(ProcessingState.ERROR.name());
-            publishMessage("Invalid RespuestaComprobanteDTO");
+            publish(() -> createMessage("Invalid RespuestaComprobanteDTO"));
         }
         document.setDateTime(new Date());
         repository.save(document);
